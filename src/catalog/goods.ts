@@ -1,0 +1,140 @@
+import type { Good } from "../data";
+
+/**
+ * Explicitly named historical materials and craft forms. These are gameplay
+ * commodity specifications, not a claim that every label was a documented
+ * standardized SKU at its access date. No universal quality cross-product is
+ * used: grain preparations, textile weaves, timber species, pottery forms,
+ * pigments and tools each have their own curated, material-appropriate list.
+ * Ports identify the source or a historically plausible export entrepot.
+ */
+type FamilyRow = [string, string, number, number, string, string, string];
+const rows: FamilyRow[] = [
+  ["inland-east-metals", "金属", 5, 110, "iron", "dengzhou yangzhou ningbo guangzhou", "晋北磁铁矿|太行赤铁矿|中原熟铁条|河东生铁块|湘江锰矿石|赣南锡砂|云南锡粒|滇中铜锭|蜀地青铜坯|岭北铅锭|华北锌矿石|山东硫铁矿|湖北孔雀石|江淮铜钱坯|湘西朱砂矿|辽东铁砂|皖南铁板|桂北铜矿砂|河南锻铁片|太原钢刀坯"],
+  ["inland-east-crafts", "手工器具", 7, 138, "merchant", "yangzhou hangzhou ningbo fuzhou guangzhou", "苏州竹刻笔筒|北京景泰蓝小盒|南京云锦带|成都蜀绣帕|太原铜炉|洛阳铜镜坯|开封木版画|杭州绢扇面|扬州漆砂砚|徽州雕版|歙县罗盘坯|景德镇瓷砚|泉州木偶头|广州牛角梳|桂林竹编笼|大理石砚屏|云南银簪坯|长沙石印章|济南石磨盘|汾河皮鼓"],
+  ["inland-east-herbs", "草木物产", 6, 79, "garden", "guangzhou yangzhou ningbo fuzhou", "亳州白芍干|怀庆山药片|陇西黄芪根|天水当归片|宁夏枸杞干|青海大黄根|蜀地黄连根|滇南三七根|浙地杭菊干|江南桑叶包|桂林罗汉果|长沙栀子干|太行连翘壳|东北五味子|甘肃甘草根|山西党参根|四川川芎块|湖北厚朴皮|皖南木瓜片|武夷乌梅干"],
+  ["inland-steppe", "草原物产", 6, 122, "wool", "sinope trebizond siraf hormuz", "撒马尔罕羊毛毯|布哈拉棉绣片|塔什干棉籽|喀什葡萄干饼|和田玉籽料|吐鲁番葡萄醋|河西驼毛线|巴尔赫羊绒束|赫拉特地毯坯|呼罗珊藏红花丝|费尔干纳杏仁|帕米尔山羊绒|伊犁蜂蜜陶罐|塔里木胡杨板|中亚鞍毯|草原皮水囊|驼铃铜坯|毡房毛毡片|里海鲟鱼胶|丝路茴香包"],
+  ["inland-india-crafts", "手工器具", 8, 145, "merchant", "surat cambay bharuch masulipatnam pulicat", "拉合尔铜壶|阿格拉石嵌片|瓦拉纳西锦缎带|斋浦尔刻花石碗|德里皮靴坯|海得拉巴银线|比贾布尔黄铜盘|迈索尔檀木梳|坦贾武尔铜灯|坎契丝绸腰带|克什米尔木雕盒|木尔坦彩陶砖|古吉拉特木印模|德干铁制农锄|马尔瓦棉纱绞|旁遮普皮鞍包|拉贾斯坦靛饼|恒河贝镯坯|加德满都铜佛灯|康提漆木匣"],
+  ["inland-southeast", "林地物产", 8, 95, "forest", "pegu martaban hoi-an ayutthaya gresik banten", "蒲甘漆碗坯|阿瓦柚木榫|清迈银碗坯|琅勃拉邦竹纸|万象安息香块|吴哥棕叶纸|金边蚕丝束|顺化桂木片|升龙竹漆筷|嘉定米纸片|万隆竹席卷|梭罗蜡染布|爪哇棕榈纤维绳|湄公河藤篮|山地野蜂巢蜡|泰北棉织披肩|缅北茶砖|越北漆树脂|柬埔寨豆蔻包|中央爪哇木面具"],
+  ["inland-europe-stone", "矿石与建材", 6, 92, "iron", "venice genoa marseille hamburg antwerp", "卡拉拉雕刻石坯|托斯卡纳砂岩板|维罗纳红石|波希米亚石榴石坯|萨克森银矿砂|蒂罗尔铜矿石|阿尔卑斯岩晶|巴伐利亚石灰块|莱茵板岩瓦|洛林铁矿砂|施瓦本磨刀石|匈牙利铜锭|波兰石盐砖|斯洛伐克银砂|威尔士蓝板岩|约克磨石|勃艮第石板|阿登青石块|奥地利滑石块|西班牙雪花石膏"],
+  ["inland-europe-crafts", "手工器具", 8, 174, "merchant", "antwerp hamburg venice genoa bordeaux bristol", "纽伦堡铜尺|奥格斯堡银杯坯|布拉格刻花玻璃杯|维也纳皮革书套|巴黎铜版|兰斯羊毛披肩|斯特拉斯堡印刷字模|科隆香草袋|法兰克福账簿|慕尼黑锡制壶|佛罗伦萨皮封书|米兰针织手套|马德里皮带坯|托莱多剑柄坯|格拉纳达木镶盒|萨拉曼卡羊皮卷|图卢兹染蓝线|苏黎世丝带|华沙蜂蜡烛|克拉科夫银扣"],
+  ["inland-west-africa", "非洲腹地物产", 8, 125, "cotton", "elmina accra benin bonny arguin", "廷巴克图棉布卷|杰内泥染布|加奥皮鞍袋|卡诺靛染长布|奥约织带|阿波美铜铃|库马西金箔坯|撒哈拉盐石块|萨赫勒小米袋|尼日尔河干鱼条|马里乳木果脂|豪萨皮靴料|约鲁巴棕纤绳|阿散蒂木梳|刚果拉菲草布|西非铁锄坯|塞内加尔阿拉伯树胶|几内亚胡椒籽|马拉喀什皮革片|非斯鞣皮料"],
+  ["inland-east-africa", "非洲腹地物产", 6, 108, "grain", "adulis massawa mogadishu sofala kilwa", "阿克苏姆苔麸|拉利贝拉蜂蜜|贡德尔棉披肩|哈勒尔咖啡生豆|高原乳香树脂|埃塞俄比亚皮盾坯|红海腹地岩盐|东非山地蜂蜡|津巴布韦金砂|赞比西铜线|内陆铁矛坯|高地石磨坯|莫诺莫塔帕棉布|非洲高原高粱|索法拉腹地芝麻|斯瓦希里编席|河谷葫芦容器|东非黑檀梳|高原山羊皮|山地蓖麻籽"],
+  ["inland-american-mines", "矿石与建材", 8, 188, "silver", "callao guayaquil veracruz acapulco rio", "波托西银矿砂|萨卡特卡斯银锭|塔斯科银片|瓜纳华托银粒|安第斯铜锤坯|拉普拉塔铅矿块|秘鲁硫磺晶|阿雷基帕火山石|库斯科石灰块|墨西哥黑曜石片|普埃布拉陶土|瓦哈卡云母片|巴西山地水晶|维拉里卡金砂|米纳斯铁矿石|智利铜矿石|玻利维亚锡矿砂|厄瓜多尔金砂|墨西哥赤铁矿颜料|安第斯孔雀石坯"],
+  ["inland-american-farms", "美洲腹地物产", 8, 76, "grain", "callao guayaquil veracruz acapulco cartagena rio", "基多藜麦袋|昆卡羊毛毯|波哥大棉织披肩|库斯科苋籽饼|拉巴斯马铃薯粉|图库曼玉米粉|萨尔塔干辣椒|亚松森马黛叶|圣保罗木薯干|瓦哈卡可可浆块|普埃布拉红豆|瓜达拉哈拉龙舌兰纤维|危地马拉胭脂虫干|尤卡坦蜂蜜壶|梅里达剑麻束|墨西哥香草荚|卡塔戈可可豆|尼加拉瓜染料木片|北美槭糖饼|圣菲鞍皮片"],
+  ["nile-grain", "粮食", 0, 17, "grain", "memphis alexandria", "埃及二粒小麦|尼罗河大麦|河谷小麦粉|粗磨大麦粉|埃及麦麸|去壳二粒麦|日晒麦粒|麦芽粒|烘焙麦粒|石磨全麦粉|埃及扁豆|尼罗河豌豆|干鹰嘴豆|蚕豆干|亚麻籽|焙烤芝麻|芝麻籽|干无花果"],
+  ["river-food", "粮食", 0, 22, "grain", "ur dilmun basra", "两河六棱大麦|两河面粉|大麦碎粒|椰枣干|椰枣膏|枣核饲料|干葡萄串|芝麻饼粕|芝麻油|两河小扁豆|芫荽籽|孜然籽|干洋葱|干蒜瓣|芥菜籽|枣椰叶篮|椰枣糖浆|干石榴皮"],
+  ["levant-food", "食品", 1, 31, "grain", "byblos sidon tyre akka jaffa", "黎凡特鹰嘴豆|黎凡特干葡萄|无花果饼|干石榴籽|腌橄榄|晒干杏子|杏仁仁|阿勒颇开心果|角豆荚|角豆粉|石榴浓汁|葡萄浓浆|晒干李子|腌刺山柑|干薄荷叶|干百里香|烘烤芝麻酱|鹰嘴豆粉"],
+  ["med-grain", "粮食", 3, 23, "grain", "syracuse palermo carthage thessaloniki chersonesus", "西西里硬粒麦|北非裸粒小麦|色雷斯大麦|黑海小麦|西西里粗粒麦粉|意大利鹰嘴豆|地中海蚕豆|鹰嘴豆碎粒|硬粒麦面条|大麦面饼|烘干麦饼|角豆饲料|饲用燕麦|去壳小米|麦糠饲料|晒干扁豆"],
+  ["europe-grain", "粮食", 6, 24, "grain", "gdansk riga lubeck hamburg novgorod bremen", "波罗的海黑麦|维斯瓦河小麦|北海燕麦|波美拉尼亚大麦|黑麦粉|荞麦粒|荞麦粉|去壳燕麦|燕麦粉|啤酒麦芽|黑麦麦芽|干豌豆|北方扁豆|亚麻籽饼|芥菜籽油|燕麦饼|黑麦船饼|小麦船饼"],
+  ["asian-grain", "粮食", 5, 25, "grain", "guangzhou yangzhou ningbo chittagong pegu palembang", "岭南籼米|江南粳米|孟加拉香米|缅甸稻米|爪哇糙米|糯米|米粉|糙米糠|稻米饼|绿豆|赤小豆|黄豆|黑豆|黄豆粉|脱壳高粱|黍米|荞麦面|炒米|干米线|米曲"],
+  ["american-grain", "粮食", 8, 26, "grain", "veracruz callao acapulco guayaquil valparaiso", "墨西哥白玉米|墨西哥黄玉米|安第斯紫玉米|玉米粗粉|烘烤玉米粒|玉米面饼|红芸豆|黑芸豆|南瓜籽|藜麦|苋菜籽|安第斯冻干薯|木薯粉|木薯薄饼|干辣椒片|花生仁|花生油|南瓜干|番薯干|利马豆"],
+  ["salt", "盐与调味", 0, 26, "salt", "dilmun magAN memphis lothal", "海湾粗海盐|迪尔蒙盐块|阿曼晒盐|印度河湖盐|尼罗河天然碱|结晶食盐|干腌盐|陶罐细盐|灰白盐饼|卤水盐砖|洗制海盐|粗粒腌鱼盐"],
+  ["europe-salt", "盐与调味", 6, 34, "salt", "lubeck la-rochelle porto ceuta tunis ravenna", "吕讷堡煮盐|盖朗德灰盐|拉罗谢尔晒盐|葡萄牙粗盐|亚得里亚海盐|突尼斯盐晶|伊比利亚盐花|西西里岩盐|盐渍酸果|葡萄酒醋|苹果醋|麦芽醋|果醋原液|芥末粉|芥末膏|腌菜卤"],
+  ["fish", "渔产", 3, 37, "fish", "gadir tangier carthage syracuse rhodes", "盐渍蓝鳍金枪鱼|金枪鱼鱼腹|风干鲭鱼|盐渍沙丁鱼|干凤尾鱼|凤尾鱼酱|古典鱼露|浓缩鱼酱|鱼卵盐膏|腌鲻鱼卵|晒干章鱼|晒干墨鱼|海鳗干|盐渍海鲈鱼|金枪鱼油|腌橄榄鱼酱"],
+  ["north-fish", "渔产", 6, 42, "fish", "bergen visby lubeck st-johns bristol dublin", "挪威鳕鱼干|卑尔根棒鱼|盐渍大西洋鳕鱼|北海鲱鱼桶|烟熏鲱鱼|波罗的海鲱鱼|腌鲑鱼|风干鲑鱼|咸鲭鱼|鱼肝油|鳕鱼胶|鱼鳔胶|腌鳗鱼|盐渍海鳟|烟熏黑线鳕|鱼粉饲料"],
+  ["asian-fish", "渔产", 6, 43, "fish", "quanzhou ningbo hakata naha malacca makassar", "福建鱼干|宁波黄鱼鲞|日本鲣鱼干|干虾米|虾酱|鱼酱油|盐渍带鱼|沙丁鱼干|晒干乌贼|海带干|紫菜干|海苔饼|琉球海盐鱼|飞鱼干|马六甲虾膏|海螺肉干|干鱼胶片|昆布碎片"],
+  ["honey", "食品", 1, 44, "honey", "crete byblos ur athens thessaloniki", "克里特百里香蜜|黎凡特山花蜜|河谷蜂蜜|爱琴海松蜜|蜂巢蜜块|压榨蜂蜡|黄蜂蜡|净制白蜂蜡|蜂胶|蜜浸无花果|蜜渍杏仁|芝麻蜜饼|蜂蜜浓浆|陶封蜂蜜"],
+  ["nuts", "食品", 3, 48, "nuts", "smyrna rhodes naples marseille trebizond", "安纳托利亚榛子|意大利甜杏仁|高加索核桃|地中海松子|栗子干|栗子粉|去皮榛仁|干核桃仁|盐焗杏仁|松子仁|晒干桑葚|葡萄干饼|苹果干环|梨脯|樱桃干|榅桲膏|山楂果干|干蔷薇果"],
+  ["wine", "酒饮", 3, 95, "wine", "rhodes crete ostia naples syracuse marseille", "罗得岛陶坛酒|克里特甜葡萄酒|坎帕尼亚红葡萄酒|西西里白葡萄酒|希俄斯海岛酒|爱琴海树脂酒|黎凡特葡萄酒|马赛葡萄酒|浓缩葡萄酒汁|加蜜葡萄酒|香草浸葡萄酒|葡萄渣蒸馏原料|陶封陈葡萄酒|新酿浑葡萄酒"],
+  ["later-wine", "酒饮", 8, 118, "wine", "porto bordeaux lisbon seville funchal malaga", "杜罗河红葡萄酒|波尔多红葡萄酒|雪莉白葡萄酒|马德拉葡萄酒|马拉加甜酒|里斯本桶装酒|加那利甜葡萄酒|普罗旺斯桃红酒|伊比利亚麝香葡萄酒|勃艮第葡萄酒|莱茵白葡萄酒|意大利马尔瓦西亚酒|葡萄白兰地|果渣烈酒|橡木桶陈酒|商船补给葡萄酒"],
+  ["beer", "酒饮", 6, 57, "beer", "hamburg bremen lubeck gdansk bristol dublin", "汉堡啤酒|不来梅麦酒|吕贝克桶装啤酒|格但斯克浓啤酒|英格兰棕麦酒|爱尔兰麦酒|黑麦啤酒|燕麦麦酒|蜂蜜酒|苹果酒|梨酒|杜松浸酒|啤酒花干|淡色麦芽|烘烤麦芽|啤酒酵泥"],
+  ["asian-drinks", "酒饮", 7, 78, "wine", "hangzhou ningbo quanzhou sakai hakata hoi-an", "绍兴黄酒|江南米酒|福建红曲酒|日本浊酒|日本清酒|糯米甜酒|梅子浸酒|荔枝果酒|桂花米酒|姜汁米酒|红曲米|黄酒酒母|酒曲块|桂花糖浆"],
+  ["oil", "油脂", 1, 69, "oil", "crete ugarit carthage tyre", "克里特初榨橄榄油|黎凡特食用橄榄油|北非灯用橄榄油|橄榄渣油|陶封橄榄油|净制灯油|芝麻香油|亚麻籽油|蓖麻灯油|杏仁油|动物脂蜡|羊脂膏|橄榄油皂坯|香草浸油"],
+  ["tropical-oil", "油脂", 8, 63, "oil", "benin bonny cochin galle makassar palembang", "几内亚棕榈油|棕榈仁油|马拉巴尔椰子油|锡兰椰蓉|干椰肉|椰壳炭|椰子纤维|椰子油皂料|印楝籽油|芝麻饼|花生油饼|棕榈蜡|植物灯油|椰壳杯"],
+  ["sugar", "糖与甜食", 8, 124, "sugar", "funchal salvador recife havana santo-domingo", "马德拉糖锥|巴西原蔗糖|加勒比黄糖|红褐糖块|精滤白糖|蔗糖蜜|黑糖蜜|糖霜碎屑|冰糖晶体|小糖锥|糖浆桶|糖渍柑橘皮|蜜饯姜块|糖渍杏仁|蔗糖糕|甘蔗渣燃料"],
+  ["cocoa", "可可与美洲香料", 8, 170, "cocoa", "veracruz acapulco guayaquil cartagena", "墨西哥可可豆|危地马拉可可豆|厄瓜多尔可可豆|烘焙可可仁|磨制可可膏|可可脂|压制可可饼|香草荚|干多香果|胭脂树籽|胭脂树籽粉|墨西哥辣椒干|烟熏辣椒|辣椒碎|烘烤香草可可|玉米可可饮料料"],
+  ["coffee", "茶与咖啡", 9, 191, "coffee", "mocha aden jeddah batavia", "摩卡生咖啡豆|也门山地咖啡豆|哈拉尔咖啡豆|爪哇生咖啡豆|日晒咖啡果|去壳咖啡仁|浅焙咖啡豆|深焙咖啡豆|石磨咖啡粉|咖啡果壳茶|小粒圆咖啡豆|陶封熟咖啡豆|香料咖啡料|咖啡豆苗圃种"],
+  ["tea", "茶与咖啡", 7, 160, "tea", "hangzhou ningbo fuzhou quanzhou yuegang", "江南散绿茶|浙江蒸青茶|福建团茶|北苑贡茶饼|建州蜡面茶|武夷岩茶|松萝炒青茶|珠形绿茶|粗叶边销茶|茶末|压制茶砖|茉莉窨茶|桂花窨茶|烘焙茶梗|日晒茶叶|芽叶绿茶|茶花干|陶罐封茶"],
+  ["pepper", "香料", 6, 147, "pepper", "muziris calicut cochin quilon aceh banten", "马拉巴尔黑胡椒|卡利卡特胡椒|亚齐胡椒|万丹胡椒|脱皮白胡椒|晒干青胡椒|长胡椒|胡椒碎粒|粗磨黑胡椒|细磨白胡椒|胡椒藤种穗|陶封胡椒|胡椒穗干|盐渍青胡椒|爪哇长胡椒|香料胡椒混料"],
+  ["cinnamon", "香料", 6, 170, "cinnamon", "galle colombo quilon guangzhou", "锡兰肉桂条|锡兰肉桂碎|桂皮卷|肉桂粉|中国桂皮|桂枝|桂花干瓣|肉桂叶|肉桂花蕾|肉桂根皮|桂皮香油|桂皮香囊料|姜黄根|姜黄粉|干姜片|生姜粉"],
+  ["moluccan-spices", "香料", 7, 265, "cloves", "ternate banda makassar malacca", "特尔纳特丁香苞|蒂多雷丁香|丁香梗|丁香碎末|丁香叶|丁香香油|班达肉豆蔻仁|肉豆蔻衣|整壳肉豆蔻|肉豆蔻粉|干肉豆蔻果皮|肉豆蔻香油|高良姜片|豆蔻果|爪哇豆蔻|香茅干束"],
+  ["indian-spices", "香料", 5, 117, "spices", "calicut cambay bharuch chaul cochin", "绿豆蔻|黑豆蔻|葫芦巴籽|黑种草籽|印度莳萝籽|小茴香籽|阿魏树脂|罗望子干|咖喱叶干|干芒果粉|藏红花丝|藏红花碎|白芥子|黑芥子|芫荽粉|孜然粉|干柠檬|石榴籽粉"],
+  ["med-herbs", "草药与香草", 3, 68, "herbs", "alexandria ephesus rhodes ostia byblos", "埃及洋甘菊|干鼠尾草|迷迭香束|薰衣草花|月桂叶|牛至干叶|莳萝花|茴香籽|甘草根|蜀葵根|芦荟膏|番泻叶|车前子|干玫瑰花|香蜂草|干芸香|杜松子|乳香粉"],
+  ["asian-herbs", "草药与香草", 7, 95, "herbs", "quanzhou guangzhou fuzhou busan hakata", "甘草片|大黄根|当归片|黄芪根|党参根|陈皮|青皮|山楂片|茯苓块|菊花干|金银花干|艾叶|薄荷梗|桔梗片|干枸杞|五味子|干山药|川芎片|白芷片|紫苏籽"],
+  ["aromatics", "香料与树脂", 3, 149, "resin", "qana aden adulis magAN sohar", "阿曼乳香|哈德拉毛乳香|索马里没药|净选乳香珠|乳香碎粒|没药粉|香脂树脂|龙血树脂|阿拉伯树胶|树脂香饼|香炉混香|干香根|乳香油膏|没药香膏|香木屑|封口树脂"],
+  ["se-asian-aromatics", "香料与树脂", 6, 164, "resin", "barus palembang brunei hoi-an kedah", "巴鲁斯龙脑|苏门答腊安息香|婆罗洲樟脑|占城沉香|白木香|达玛树脂|藤黄树脂|苏合香脂|降真香木|香茅油料|檀香木屑|乌木香盒|沉香碎片|樟木屑|龙脑香粉|安息香块"],
+  ["linen", "纤维与布料", 0, 40, "linen", "memphis lothal byblos ur", "埃及亚麻原束|沤制亚麻茎|梳理亚麻纤维|亚麻纱团|粗麻平纹布|细支亚麻布|漂白亚麻布|未漂亚麻布|亚麻帆布|麻布袋|亚麻绷带卷|亚麻网线|窄幅麻带|亚麻缝纫线|麻絮|亚麻包裹布"],
+  ["cotton", "纤维与布料", 6, 107, "cotton", "cambay surat chittagong masulipatnam pulicat", "孟加拉细棉布|古吉拉特棉布|科罗曼德尔印花布|苏拉特白棉布|手纺棉纱|轧制棉花|棉絮包|细平纹棉布|粗平纹棉布|靛蓝棉布|红染棉布|条纹棉布|格纹棉布|木版印花棉布|棉布头巾|棉布被面|棉线渔网|棉布帆片|棉织腰带|棉布包巾"],
+  ["wool", "纤维与布料", 6, 99, "wool", "bruges antwerp bristol dublin edinburgh bordeaux", "英格兰羊毛|苏格兰羊毛|爱尔兰羊毛|伊比利亚细羊毛|洗净羊毛|梳理羊毛条|粗纺毛纱|精纺毛纱|佛兰德斯毛呢|缩绒毛呢|斜纹毛布|厚绒斗篷料|粗呢布|毛毡片|羊毛毯|染红毛呢|蓝色毛呢|条格毛布|毛袜|羊毛帽"],
+  ["silk", "丝织品", 6, 188, "silk", "guangzhou quanzhou hangzhou ningbo yangzhou", "江南生丝|双宫丝|丝绵|绢纱|缫丝线|素绢|轻纱|罗纱|暗花绫|素缎|提花缎|织锦|缂丝片|绣花绢|丝绸帕|绢扇面|彩丝绦|织金锦|花绫衣料|绉纱|丝绸腰带|绣线束|染色丝线|绸缎包袱"],
+  ["western-silk", "丝织品", 7, 209, "silk", "constantinople venice genoa ragusa famagusta", "拜占庭紫绸|意大利丝绒|威尼斯金丝缎|热那亚绒锦|黎凡特条纹绸|丝棉交织布|丝麻交织布|绣花帷幔|丝绸桌覆|锦缎枕套|丝织缎带|教堂纹锦|丝绸旗面|商会纹章绸"],
+  ["bast-fibres", "纤维与绳索", 6, 61, "fibre", "riga gdansk novgorod hamburg lubeck", "波罗的海大麻纤维|俄罗斯麻束|沤制大麻|船用麻纱|粗捻麻绳|细捻麻绳|缆绳麻芯|焦油浸麻线|粗麻帆布|麻袋布|苎麻纤维|苎麻纱|黄麻粗布|麻絮填缝料|网具麻线|麻织吊床"],
+  ["dyes", "染料", 3, 136, "dye", "tyre sidon alexandria smyrna gadir", "推罗骨螺紫|紫染浓膏|茜草根|茜草红粉|红花花瓣|红花染膏|靛青染饼|菘蓝染料|木犀草黄|石榴皮染料|栎瘿|鞣酸瘿粉|苏木碎片|烟灰墨料|黄土颜料|赭石粉|绿土颜料|炭黑粉"],
+  ["later-dyes", "染料", 8, 177, "dye", "veracruz acapulco salvador recife surat cambay", "墨西哥胭脂虫红|胭脂红染饼|巴西红木屑|伯南布哥染木|墨西哥洋苏木|靛蓝染块|印度靛蓝粉|安纳托胭脂粉|姜黄染粉|诃子染料|黑儿茶|没食子染膏|紫胶染料|红檀香粉|槐花黄染料|明矾媒染料"],
+  ["leather", "皮革", 3, 94, "leather", "carthage tripoli tangier ostia thessaloniki", "山羊鞣皮|绵羊软皮|牛鞣革|薄羊皮|粗牛皮|油鞣皮|染红山羊皮|染黑牛皮|皮革水囊|羊皮酒囊|皮革包袋|皮制绑带|皮革鞋底|皮绳卷|皮革书封料|皮盾包面|鞍具皮片|牛皮胶"],
+  ["northern-leather", "皮革与毛皮", 9, 162, "leather", "novgorod riga quebec new-amsterdam boston", "俄国蜡鞣革|波罗的海鹿皮|加拿大海狸皮|北美鹿皮|水獭毛皮|狐毛皮|松鼠毛皮|貂毛皮|兔毛皮|羊羔毛皮|驯鹿皮|柔鞣鹿皮|毛皮帽料|皮革手套|毛毡帽坯|鞣皮树皮|皮革防水脂|皮革旅行箱"],
+  ["cedar-wood", "木材", 0, 65, "cedar", "byblos ugarit arwad sidon", "黎巴嫩雪松原木|雪松船板|雪松梁木|雪松薄板|雪松木箱|雪松桅杆材|雪松木钉|雪松木屑|柏木原木|柏木船板|橄榄木料|橄榄木碗|叙利亚松木|松脂块|木炭袋|木工刨花"],
+  ["europe-wood", "木材", 6, 79, "wood", "riga gdansk bergen stockholm hamburg novgorod", "波罗的海橡木|挪威松木|瑞典杉木|白桦原木|山毛榉木料|榆木料|梣木料|胡桃木板|橡木船肋|长直松桅材|冷杉船板|橡木桶板|白桦树皮|松木焦油|木沥青|桦皮焦油|炭化木炭|橡木木钉|榆木水管|桦木器皿"],
+  ["tropical-wood", "木材", 7, 118, "wood", "pegu martaban cochin galle brunei makassar", "缅甸柚木|马拉巴尔柚木|锡兰乌木|婆罗洲铁木|苏拉威西硬木|印度紫檀|黄檀板料|红木小料|竹竿束|藤条束|棕榈木料|椰壳工艺料|柚木船板|柚木船肋|乌木饰板|竹篾|藤编筐|藤缆|棕榈叶席|竹编箱"],
+  ["american-wood", "木材", 8, 111, "wood", "havana salvador recife guayaquil veracruz", "加勒比桃花心木|中美洲雪松|巴西染木原段|瓜亚基尔轻木|墨西哥松木|牙买加愈创木|桃花心木板|雪松烟叶箱|轻木浮材|硬木船栓|染木木片|树脂封缝料|木桶塞|硬木滑轮坯|棕榈编席|竹木货筐"],
+  ["copper", "金属", 0, 80, "copper", "magAN dilmun ur lothal", "阿曼粗铜|马干铜锭|熔炼红铜|铜矿石|孔雀石矿块|红铜板|红铜线|铜条|铜钉|铜铆钉|铜片饰料|铜锥|铜凿|铜鱼钩|铜手镯|铜盆|铜壶|铜秤砣"],
+  ["bronze", "金属与器具", 1, 112, "copper", "crete ugarit salamis arwad", "青铜锭|高锡青铜|低锡青铜|铅青铜坯|锡矿砂|锡条|青铜斧|青铜凿|青铜锯|青铜镰|青铜针|青铜镜|青铜铃|青铜扣|青铜砝码|青铜盘|青铜灯|青铜门铰"],
+  ["iron", "金属与器具", 3, 91, "iron", "sinope ostia gadir naples miletus", "块炼铁|熟铁条|锻铁板|软铁丝|铁矿石|赤铁矿|磁铁矿|铁钉|铁铆钉|铁链|铁锚爪|铁环|铁犁铧|铁锄头|铁镰刀|铁锤|铁钳|铁凿|铁锯条|铁锅"],
+  ["later-metals", "金属与器具", 7, 131, "iron", "stockholm antwerp hamburg sakai nagasaki", "瑞典条铁|日本铁砂|精炼钢条|渗碳钢坯|刃具钢料|弹簧钢片|钢锯|钢锉|钢钻头|铸铁锅|铁制炉板|铜锡焊料|黄铜板|黄铜丝|黄铜铆钉|铅板|铅锭|锡器合金|锌矿石|黄铜扣件"],
+  ["precious-metals", "贵金属", 8, 411, "silver", "veracruz acapulco callao nagasaki lisbon", "安第斯银锭|墨西哥银锭|日本银锭|细银条|银片|银丝|银箔|银粒|银器坯|金币熔料|金箔|金丝|金粒|金银合金条|银焊料|银杯|银勺|银烛台|银饰链|银制带扣"],
+  ["gold", "贵金属", 8, 395, "gold", "elmina accra sofala kilwa mozambique", "几内亚砂金|黄金海岸金粒|索法拉金砂|东非金锭|洗炼金屑|锤制金片|金饰线|金珠|金环|黄金挂坠|鎏金料|金箔册|金银错嵌料|金饰扣"],
+  ["gems", "宝石", 5, 349, "gems", "cambay bharuch galle colombo siraf", "锡兰蓝宝石|锡兰红宝石|星光蓝宝石|尖晶石|石榴石|红玉髓|玛瑙|条带玛瑙|缟玛瑙|水晶|紫水晶|黄水晶|绿柱石|海蓝宝石|月光石|碧玺|石英珠|玉髓珠|雕花玛瑙|抛光宝石坯"],
+  ["pearls", "珠贝与装饰", 4, 279, "ivory-sub", "dilmun siraf hormuz qishm galle kilwa", "波斯湾天然珍珠|小粒海珠|不规则巴洛克珠|米形珍珠|圆形珍珠|珠母贝片|螺钿薄片|贝壳珠|海螺壳|贝雕钮扣|珍珠串|珠母贝梳|贝壳镶片|白蝶贝壳|珍珠粉|海贝项饰"],
+  ["minerals", "矿物与石材", 3, 86, "minerals", "alexandria ostia ephesus rhodes carthage", "埃及雪花石|白大理石|灰大理石|石灰岩块|花岗岩块|浮石|石膏粉|熟石灰|生石灰|火山灰|磨石坯|燧石片|天然金刚砂|石英砂|陶土|高岭土|红黏土|白垩粉|硫磺块|明矾石"],
+  ["pigments", "颜料与绘画", 7, 142, "pigment", "venice genoa alexandria hormuz constantinople", "青金石颜料|天然群青|石青|石绿|朱砂|铅白|铅锡黄|黄赭石|红赭石|烧赭石|棕土|锰褐颜料|炭精黑|灯烟黑|胭脂色淀|铜绿|蓝铜矿粉|蛋彩胶料|动物胶片|绘画底粉"],
+  ["pottery", "陶器", 0, 57, "pottery", "memphis ur lothal byblos", "尼罗河红陶罐|两河储粮罐|印度河黑绘陶|黎凡特双耳罐|陶制水壶|陶制酒壶|陶制油瓶|陶碗|陶盘|陶杯|陶灯|陶纺轮|陶网坠|陶珠|陶封泥|陶盖|陶制漏斗|陶制滤器|小口储水罐|宽口粮缸"],
+  ["classical-pottery", "陶器", 3, 79, "pottery", "athens corinth ostia syracuse rhodes", "阿提卡黑绘陶瓶|阿提卡红绘陶瓶|科林斯彩绘陶|罗马红釉陶盘|罗得岛双耳瓶|压印陶碗|黑彩陶杯|葡萄酒运输陶坛|橄榄油运输陶坛|鱼酱运输陶坛|陶制香膏瓶|陶制烹饪锅|耐火陶炉|彩陶灯|陶制排水管|陶瓦片|马赛克陶块|陶塑小像"],
+  ["medieval-pottery", "陶器", 7, 115, "pottery", "valencia malaga tunis famagusta constantinople martaban", "瓦伦西亚金彩陶盘|马拉加锡釉陶|突尼斯蓝绘陶|塞浦路斯刻划陶|拜占庭釉陶|马达班大缸|波斯釉陶碗|绿釉油壶|蓝釉小瓶|黄釉陶碟|多彩陶砖|陶制药罐|锡釉水罐|施釉炊锅|带盖陶汤盆|彩陶烛台"],
+  ["porcelain", "瓷器", 7, 231, "porcelain", "quanzhou fuzhou ningbo hangzhou guangzhou", "越窑青瓷碗|龙泉青瓷盘|龙泉青瓷瓶|景德镇青白瓷|景德镇青花碗|青花大盘|青花执壶|德化白瓷杯|德化白瓷瓶|建窑黑釉盏|磁州白地黑彩罐|定窑白瓷盘|影青小碟|青瓷香炉|瓷质水注|青花药罐|白瓷油盒|瓷制棋子|瓷珠|瓷制印泥盒|青花鱼盆|瓷制茶叶罐|青花花觚|瓷质汤匙"],
+  ["later-porcelain", "瓷器", 9, 264, "porcelain", "yuegang macao nagasaki hakata manila", "漳州窑外销瓷盘|克拉克瓷大盘|五彩瓷瓶|五彩人物盘|青花山水碗|外销纹章瓷|伊万里瓷碗|有田青花盘|日本柿右卫门瓷|荷兰式瓷水罐|青花巧克力杯|瓷制咖啡壶|瓷制糖罐|彩瓷茶杯|瓷制奶罐|带盖瓷汤碗"],
+  ["glass", "玻璃", 3, 129, "glass", "tyre sidon alexandria ostia", "黎凡特玻璃珠|埃及蓝玻璃|吹制玻璃杯|玻璃小酒瓶|玻璃香水瓶|玻璃油瓶|玻璃碗|玻璃盘|彩色玻璃棒|玻璃马赛克块|透明玻璃碎料|绿色玻璃碎料|玻璃手镯|玻璃吊坠|玻璃药瓶|玻璃灯盏|磨砂玻璃器|千花玻璃片"],
+  ["venetian-glass", "玻璃", 7, 179, "glass", "venice antwerp amsterdam genoa", "穆拉诺透明玻璃|威尼斯高脚杯|彩丝玻璃杯|乳白玻璃碗|蓝色玻璃珠串|镜片玻璃|平板窗玻璃|彩绘窗片|玻璃沙漏|玻璃水瓶|玻璃蒸馏器|玻璃漏斗|玻璃试药瓶|玻璃灯罩|刻花玻璃杯|镶嵌玻璃珠"],
+  ["paper", "纸与书写", 7, 83, "paper", "hangzhou fuzhou yangzhou ningbo guangzhou", "竹纸|桑皮纸|楮皮纸|麻纸|皮纸|棉纸|白宣纸|染色笺纸|花笺|油纸|防潮包装纸|纸伞面|纸扇面|木刻印书纸|账册纸|信封纸|纸绳|硬纸匣|纸浆饼|刻印祭祀纸"],
+  ["writing", "纸与书写", 3, 78, "writing", "alexandria memphis ostia athens ephesus", "埃及纸草卷|纸草单页|书写木板|涂蜡板|羊皮纸|薄犊皮纸|芦苇笔|青铜笔尖|炭黑墨|铁胆墨|红色书写墨|墨粉|墨水陶瓶|书写板蜡|芦苇笔管|木制笔盒|羊皮卷轴带|抄写用尺"],
+  ["books", "书籍与知识", 8, 171, "books", "venice antwerp london amsterdam genoa lisbon", "商用算术书|复式记账手册|沿岸航路志|港口税则册|船匠手册|草木图鉴|矿物图鉴|天文历表|潮汐表册|商贸词汇表|度量衡换算册|航海日志空册|货物总账簿|保险契约纸本|海图集|星图页|经纬测算表|印刷字体样册"],
+  ["asian-writing", "纸与书写", 7, 106, "paper", "hangzhou nanjing fuzhou busan hakata", "松烟墨锭|油烟墨锭|朱墨锭|毛笔|狼毫笔|羊毫笔|砚石坯|端砚|歙砚|木雕版|印泥|篆刻石|竹简刻字料|书画装裱绫|卷轴木杆|线装书封皮|文书木匣|笔筒"],
+  ["navigation", "航海器具", 8, 183, "navigation", "lisbon seville venice amsterdam antwerp london", "磁罗盘|船用罗经盘|罗盘磁针|黄铜星盘|木制十字测天仪|象限仪|铅制测深锤|标结测速绳|测深绳|半时沙漏|四时沙漏|海图分规|黄铜直尺|绘图圆规|航海算盘|木制风向标|观星瞄准尺|港口灯笼|防风油灯|测距链"],
+  ["ship-rigging", "船用器材", 6, 109, "rigging", "genoa venice bergen hamburg bristol riga", "橡木滑轮|榆木绞盘|船用绞盘轴|帆桁木|桅顶圆盘|索具木扣|缆绳木桩|铁制卸扣|铁制链环|帆布补片|船帆缝线|缝帆针|填缝麻絮|防水焦油桶|船体沥青桶|舱口木盖|船舵铰链|船桨|备用舵柄|木制舀水斗"],
+  ["tools", "手工工具", 6, 94, "iron", "stockholm hamburg antwerp sakai bristol", "木工刨|木工凿|弓锯|手锯|开槽锯|拉钻|手摇钻|圆规锯|木工锤|石匠锤|铁匠砧|锻造钳|木柄斧|劈柴斧|锛斧|镰刀坯|修枝钩刀|剪羊毛剪|裁布剪|皮革冲子|锥子|磨刀石|细磨油石|铁制刮刀"],
+  ["household", "日用器具", 6, 77, "household", "genoa venice barcelona ragusa naples", "铜制汤锅|黄铜水壶|锡制酒杯|锡盘|铁制烛台|铜油灯|木制餐盘|木勺|木叉|黄铜勺|骨柄小刀|木梳|骨梳|铜镜|木盆|木桶|铁箍水桶|木制提箱|木制秤杆|铜制天平|陶制漏勺|黄铜门锁"],
+  ["containers", "包装与容器", 3, 53, "containers", "ostia alexandria carthage rhodes byblos", "橡木酒桶|松木货箱|柳条筐|芦苇筐|棕榈叶货篮|麻布货袋|皮革信袋|陶制封口瓶|蜂蜡封瓶料|树脂封罐料|木桶箍|铁桶箍|陶坛草套|草绳捆扎带|亚麻包布|货物封泥印|黄铜秤盘|石制砝码"],
+  ["furniture", "家具", 8, 153, "furniture", "venice genoa amsterdam london lisbon", "橡木储物箱|胡桃木书箱|折叠木凳|藤编椅|皮面凳|木制航海桌|黄铜包角箱|嵌木首饰匣|镜框|木制衣架|小型床架|雕花木托盘|木格书架|船舱折叠桌|帐册抽屉柜|烛台木座"],
+  ["textile-crafts", "服饰与手工", 8, 135, "clothcraft", "bruges antwerp venice genoa ragusa", "佛兰德斯花边|针织袜|毛呢兜帽|亚麻衬衣|皮革围裙|船员帆布裤|绣花腰带|编织束带|丝质领巾|手工针线包|黄铜衣扣|贝壳衣扣|骨制衣扣|包布纽扣|服装铜钩|绣花桌巾|亚麻餐巾|针织手套|布制钱袋|毛毡鞋垫"],
+  ["asian-crafts", "漆器与手工", 7, 150, "lacquer", "guangzhou quanzhou ningbo hakata sakai naha", "黑漆碗|朱漆盘|螺钿漆盒|描金漆盒|漆木托盘|漆器茶筒|漆木梳盒|竹编食盒|雕竹笔筒|竹骨折扇|团扇|油纸伞|木制棋盘|木雕棋子|骨制骰子|陶制棋子|木版年画|竹编茶筛|棕编蓑衣|竹制箩筐"],
+  ["perfume-soap", "香氛与皂料", 7, 140, "perfume", "marseille venice alexandria smyrna sidon", "马赛橄榄油皂|阿勒颇月桂皂|软皂膏|洗衣皂块|玫瑰水|橙花水|薰衣草水|迷迭香水|玫瑰香膏|茉莉香膏|香草发油|杏仁润肤膏|香囊填料|香木梳油|洗涤草木灰|皂角干荚|浴用浮石|香蜡烛"],
+  ["musical-crafts", "乐器与装饰", 8, 174, "crafts", "venice genoa constantinople seville", "鲁特琴|小提琴|竖笛|木制横笛|手鼓|铃鼓|黄铜铃|船钟|弦乐器肠弦|琴弓木料|拨弦片|鼓皮|乐谱纸本|彩绘木面具|雕木圣像|铜制小像|黄铜相框|刺绣旗帜"],
+  ["beads-jewels", "珠饰与工艺", 8, 186, "gems", "venice cambay nagasaki elmina acapulco", "威尼斯彩珠|坎贝红玉髓珠|切面玻璃珠|琉璃管珠|镀金铜珠|银丝耳环|铜制手环|玛瑙戒面|水晶挂坠|贝珠串|金箔玻璃珠|蓝玻璃眼珠|珐琅吊坠|珐琅胸针|银饰发簪|珠母贝发梳|黄铜项链|银线花饰"],
+  ["agricultural-tools", "农具与种子", 7, 79, "farmtools", "gdansk hamburg bordeaux yangzhou hangzhou", "铁制锄刃|铁制铲头|木柄耙|木制犁身|谷物筛|扬谷簸箕|播种袋|麻绳牲畜笼头|镰刀磨石|木制水轮配件|灌溉陶管|蜂箱木板|园艺剪|果树嫁接刀|亚麻播种籽|大麻播种籽|菜籽种|萝卜籽|芥菜籽种|葫芦籽"],
+  ["gardens", "园艺物产", 8, 69, "garden", "lisbon seville valencia funchal galle cochin", "干柠檬片|干橙皮|苦橙果皮|柑橘籽|无花果插枝|橄榄插穗|葡萄枝条|枣椰幼苗|槟榔干|槟榔叶包料|莲子干|百合干|芋头干|菠萝果干|芒果干|香蕉干|酸橙汁|柑橘蜜饯|玫瑰花蕾|茉莉花苞"],
+  ["preserves", "船用食品", 9, 58, "provisions", "boston bristol london amsterdam hamburg havana", "双烤船饼|黑麦硬饼|燕麦船粮|盐腌牛肉|盐腌猪肉|风干火腿|烟熏肉片|硬质奶酪|羊乳干酪|黄油陶罐|豌豆汤料|腌卷心菜|盐渍萝卜|苹果干袋|葡萄干补给包|柠檬糖浆|大麦汤料|压实燕麦饼|腌黄瓜|梅子酱"],
+  ["baltic-natural", "林地物产", 6, 85, "forest", "riga novgorod visby gdansk stockholm bergen", "波罗的海琥珀|原石琥珀|抛光琥珀珠|琥珀碎料|松树脂|云杉树脂|白桦菌干|干蘑菇|野莓干|杜松木片|橡树皮|桦树皮卷|鹿角工艺料|骨片坯|骨针|骨制纺轮|松明|树皮编盒"],
+  ["south-seas", "海岛物产", 8, 91, "island", "brunei makassar manila naha banda ternate", "藤棕纤维|蕉麻原束|蕉麻绳|西米粉|西米粒|干面包果|棕榈糖饼|椰糖块|海岛蜂蜡|贝制鱼钩|竹制鱼笼|木制浮标|蒲草席|露兜叶编包|香茅束|干高良姜|棕叶扇|螺壳钮料"],
+  ["merchant-supplies", "商会用品", 8, 116, "merchant", "venice genoa antwerp amsterdam lisbon london", "黄铜商会印章|封蜡棒|朱红封蜡|天然虫胶|紫胶片|账房算盘|硬木算筹|铜质筹码|铁制钱箱|小型银秤|折叠杆秤|套叠铜砝码|黄铜货签|皮封账本|羊皮契约夹|木制海图筒|防水信筒|码头吊秤|货物验样勺|钥匙坯"],
+];
+
+const colors: Record<string, string> = {
+  粮食: "#c9ae6c", 食品: "#bfa26d", 渔产: "#8db1b2", 酒饮: "#b18476",
+  木材: "#8da17a", 金属: "#b59b85", 瓷器: "#b8cecb", 陶器: "#c19778",
+  香料: "#b7a177", 染料: "#a593b4", 贵金属: "#c9bd93", 宝石: "#8bb6ad",
+};
+
+// A few named styles arose later than the underlying commodity family. Keep
+// those exceptions explicit rather than letting a broad family unlock them.
+const laterStyles: Record<string, number> = {
+  "斋浦尔刻花石碗":10, "梭罗蜡染布":10, "哈勒尔咖啡生豆":8, "贡德尔棉披肩":9, "阿散蒂木梳":9, "北京景泰蓝小盒":8,
+  "武夷岩茶": 9, "松萝炒青茶": 8, "珠形绿茶": 9,
+  "景德镇青花碗": 7, "青花大盘": 7, "青花执壶": 7,
+  "德化白瓷杯": 8, "德化白瓷瓶": 8,
+  "外销纹章瓷": 10, "日本柿右卫门瓷": 9,
+  "花生油": 8, "菠萝果干": 8,
+};
+
+export const extendedGoods: Good[] = rows.flatMap(([slug, category, era, base, familyId, sourcePorts, names]) =>
+  names.split("|").map((name, index) => ({
+    id: `catalog-${slug}-${index.toString(36)}`,
+    name, icon: name[0], category, familyId, era: Math.max(era, laterStyles[name] ?? 0),
+    // Within-family values reflect distinct material/processing forms. They are
+    // balance constants, not historical price quotations or quality grades.
+    base: Math.max(12, Math.round(base * (0.74 + ((index * 7 + slug.length) % 15) * 0.045))),
+    color: colors[category] ?? "#aeaa89", unit: "箱",
+    originPortIds: sourcePorts.split(" "),
+    description: `${category} · ${name}。按一箱标准货量交易；历史材料与手工形制经经营玩法归并。`,
+  })),
+);
+

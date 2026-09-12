@@ -1,0 +1,15 @@
+import { TradeSim, eras, goods, ports, origins } from '../src/sim.ts';
+import assert from 'node:assert/strict';
+const s = new TradeSim();
+s.start(origins[0]);
+assert(s.state.started);
+assert(s.state.supplies>0);
+const before=s.state.cash;
+s.buy('grain',1);
+s.sell('grain',1);
+assert(s.state.cash<before,'Same-port buy-sell must cost money');
+for(const e of eras) assert(e.title&&e.years);
+assert.equal(eras.length,11);
+assert(ports.length>=30);
+assert(goods.length>=20);
+console.log('Basic economy assertions ready');

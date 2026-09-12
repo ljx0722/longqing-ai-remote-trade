@@ -1,0 +1,13 @@
+# Port life integration contract
+
+Implement a standalone src/port-life.ts and behavior tests. Root owns sim.ts/main.ts/styles.css and integrates calls. Do not edit these root files.
+
+Goal: combine Civilization specialization/research with Stardew's residents, seasonal requests, collection bundles and a reason to revisit familiar ports. All local deterministic simulation, no API/token costs. Must be functioning economics, not decorative cards.
+
+Export LifeState, createLifeState(), readLifeState(raw:unknown,day:number):LifeState|null; a compact JSON-persistable state. Export PortLife class constructed as new PortLife(state:LifeState, host:LifeHost). Interface LifeHost exposes day, eraIndex, currentPortId, cash, atSea, supplies, shipCapacity as getters, and cargo(goodId):number, marketGoods(portId):Good[], spendCash(amount):boolean, addCash(amount):void, consumeCargo(goodId,quantity):boolean, addReputation(amount):void. Keep costs strict, cannot double-claim rewards. Root controls accounting removal of cargo.
+
+Use methods season():{name,day,festival}, residents():{id,name,role,portrait,friendship,dialogue}[], talk(id):{ok,message}, commissions():{id,title,description,goodId,quantity,reward,expiresDay,status}[], acceptCommission(id), deliverCommission(id) -> {ok,message}, technologies():{id,name,description,cost,era,requires,unlocked}[], research(id), facilities():{id,name,description,cost,level}[], build(id), bundles():{id,name,description,requirements:{goodId,quantity}[],reward,completed}[], contributeBundle(id). Return action objects {ok:boolean,message:string}.
+
+Expose bonuses() => { speed:number; riskReduction:number; taxReduction:number; supplyReduction:number; capacity:number; production:number } where speed multiplier default1; other bonuses default0. Three facilities (warehouse/workshop/garden), ~9 branch techs with prerequisite/era gating, named local residents (shared archetypes acceptable if city-specific identities), rotating 3-4 commissions, three collection bundles, 4 seasons/28days. Festivals give a concrete commission/relation benefit; gifts/talk daily limited; request deadline and accepted cap <=3. Completion consumes actual held cargo and grants reward/relationship. Starter requests must be feasible with local low-cost goods. Late content scales slowly to avoid economy exploits. Emit bonuses cleanly for root application.
+
+Persistence validates all state structure, finite bounds, known tech/facility ids, city/good references, duplicate claims. Old undefined state initializes. Test actual resource deductions, locked research, once-per-day relations, expiration, save roundtrip and repeat reward rejection. Send final exact API and test result promptly.

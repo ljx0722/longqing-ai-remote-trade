@@ -1,0 +1,16 @@
+{
+  "id": "./",
+  "name": "长晴 AI · 远海商途",
+  "short_name": "远海商途",
+  "description": "跨越古今的航海贸易与商贸家族经营。",
+  "lang": "zh-CN",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#132f31",
+  "theme_color": "#173b3b",
+  "icons": [
+    { "src": "icons/compass.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

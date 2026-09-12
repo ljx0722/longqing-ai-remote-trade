@@ -1,0 +1,26 @@
+{
+  "name": "longqing-ai-remote-trade",
+  "private": true,
+  "version": "0.4.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "test": "node work/prepare-test.mjs && node work/economy-check.mjs && node work/clock-check.mjs && node work/market-events-check.mjs && node work/market-events-review-check.mjs && node work/trade-accounting-check.mjs && node work/catalog-check.mjs && node work/catalog-events-check.mjs && node work/navigation-check.mjs && node work/port-life-check.mjs && node work/dominion-check.mjs && node work/expansion-integration-check.mjs && node work/world-continuity-check.mjs",
+    "format": "prettier --write src index.html",
+    "test:ui": "node work/expansion-ui-check.cjs",
+    "test:terrain": "node work/terrain-check.mjs",
+    "test:terrain-ui": "node work/terrain-ui-check.cjs",
+    "test:map-input": "node work/map-pan-check.cjs"
+  },
+  "dependencies": {
+    "three": "^0.178.0"
+  },
+  "devDependencies": {
+    "@types/three": "^0.178.0",
+    "prettier": "^3.9.6",
+    "typescript": "^5.8.3",
+    "vite": "^7.1.2"
+  }
+}
