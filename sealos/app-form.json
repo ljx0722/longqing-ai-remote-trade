@@ -1,0 +1,32 @@
+{
+  "appForm": {
+    "appName": "longqing-remote-trade",
+    "imageName": "ghcr.io/ljx0722/longqing-ai-remote-trade:latest",
+    "runCMD": "",
+    "cmdParam": "",
+    "replicas": 1,
+    "cpu": 500,
+    "memory": 512,
+    "hpa": { "use": false, "target": "cpu", "value": 50, "minReplicas": 1, "maxReplicas": 1 },
+    "secret": { "use": false, "username": "", "password": "", "serverAddress": "docker.io" },
+    "networks": [{
+      "networkName": "",
+      "portName": "http",
+      "port": 80,
+      "protocol": "TCP",
+      "appProtocol": "HTTP",
+      "openPublicDomain": true,
+      "publicDomain": "",
+      "customDomain": "",
+      "domain": "",
+      "openNodePort": false
+    }],
+    "envs": [],
+    "configMapList": [],
+    "storeList": [],
+    "labels": { "app.kubernetes.io/name": "longqing-remote-trade", "app.kubernetes.io/part-of": "remote-trade" },
+    "volumes": [],
+    "volumeMounts": [],
+    "kind": "deployment"
+  }
+}
